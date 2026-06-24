@@ -61,12 +61,13 @@ builder.Services.AddHttpClient<OMDbService>();
 //builder to add cors to stop api from blocking requests
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowIonic", policy =>
-    {
-        policy.WithOrigins("http://localhost:8100") //MARKER - CHANGE THIS TO YOUR LOCALHOST
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
 });
 
 
@@ -80,7 +81,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowIonic");
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
