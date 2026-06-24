@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Movie Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="!isLoading && movie" class="ion-padding">
+    
+    <ion-button fill="clear" (click)="goBack()">
+      <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+      Back to Search
+    </ion-button>
+    
+    <ion-grid>
+      <ion-row>
+        <!-- Poster Column -->
+        <ion-col size="12" size-md="4" size-lg="3">
+          <img [src]="movie['Poster']" *ngIf="movie['Poster']" class="poster-image">
+          <div *ngIf="!movie['Poster']" class="no-image">
+            🎬 No Poster Available
+          </div>
+        </ion-col>
+        
+        <!-- Details Column -->
+        <ion-col size="12" size-md="8" size-lg="9">    
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>{{ movie['Title'] || 'N/A' }}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <p><strong>Title:</strong> {{ movie['Title'] || 'N/A' }}</p>
+
+                <p><strong>Released:</strong> {{ movie['Year'] || 'N/A' }}</p>
+
+                <p><strong>Runtime:</strong> {{ movie['Runtime'] || 'N/A' }}</p>
+
+                <p><strong>Genre:</strong> {{ movie['Genre'] || 'N/A' }}</p>
+
+                <p><strong>Type:</strong> {{ movie['Type'] || 'N/A' }}</p>
+
+                <p><strong>IMDb Votes:</strong> {{ movie['imdbVotes'] || 'N/A' }}</p>
+
+                <p><strong>Cast:</strong></p>
+                <p>{{ movie['Actors'] || 'N/A' }}</p>
+
+                <p><strong>Description:</strong></p>
+                <p>{{ movie['Plot'] || 'N/A' }}</p>
+
+              </ion-card-content>
+          </ion-card>
+          
+          <ion-button expand="block" (click)="addToWatchlist()">
+            <ion-icon name="bookmark-outline" slot="start"></ion-icon>
+            Add to Watchlist
+          </ion-button>
+
+          <ion-button expand="block" (click)="addToWatchedlist()">
+            <ion-icon name="bookmark-outline" slot="start"></ion-icon>
+            Add to Watched List
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

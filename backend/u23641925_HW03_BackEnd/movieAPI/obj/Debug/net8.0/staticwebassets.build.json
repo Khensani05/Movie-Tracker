@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "nVpynsiQUtOp/0t1EFWhdpE/sFev7qvl7XULZM+rumI=",
+  "Source": "movieAPI",
+  "BasePath": "_content/movieAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

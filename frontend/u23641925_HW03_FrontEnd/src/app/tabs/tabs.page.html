@@ -1,0 +1,334 @@
+<ion-tabs (ionTabsDidChange)="onTabChange($event)">
+  <!-- Search Tab -->
+  <ion-tab tab="search">
+    <ion-content>
+      <ion-searchbar 
+        [(ngModel)]="searchWord"
+        (ionInput)="onSearch()"
+        (ionChange)="onSearch()"
+        placeholder="Search Movie">
+      </ion-searchbar>
+
+      <p class="search-hint">Search to see more movies</p>
+
+      <!-- Loading spinner -->
+      <div *ngIf="isLoading" class="ion-text-center ion-padding">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Loading movies...</p>
+      </div>
+
+      <!-- Display search results as grid -->
+      <ion-grid *ngIf="!isLoading && searchResult.length > 0">
+        <ion-row>
+          <ion-col size="12" size-md="6" size-lg="4" *ngFor="let movie of searchResult">
+            <ion-card (click)="getMovieDetails(movie)">
+              <!-- In search tab -->
+              <img [src]="getPosterUrl(movie.Poster)" 
+                  (error)="movie.Poster = 'assets/default-poster.png'">
+              <ion-card-content>
+                <p class="movie-title">{{ movie['Title'] }}</p>
+                <p class="movie-year">{{ movie['Year'] }}</p>
+
+                <div class="iconsave">
+                  <ion-icon 
+                    name="bookmarks-outline" 
+                    title="Save to watch list"
+                    (click)="saveToWatchlist($event, movie)">
+                  </ion-icon>
+                  <ion-icon 
+                    name="play-circle-outline" 
+                    title="Save to watched list"
+                    (click)="saveToWatchedList($event, movie)">
+                  </ion-icon>
+                </div>                 
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <!-- Show message if no results found -->
+      <div *ngIf="!isLoading && searchResult.length === 0 && searchWord" class="ion-text-center ion-padding">
+        <ion-icon name="sad-outline" style="font-size: 48px;"></ion-icon>
+        <p>No movies found for "{{ searchWord }}"</p>
+        <p>Try a different search term</p>
+      </div>
+    </ion-content>
+  </ion-tab>
+
+  <!-- Watchlist Tab -->
+  <ion-tab tab="watch-list">
+    <ion-content>
+      <ion-title size="large">Watchlist</ion-title>
+
+      <!-- show the p tags if there are no movies AND the app is not loading -->
+      <div *ngIf="watchlistMovies.length === 0 && !isLoadingWatchlist" class="ion-text-center ion-padding">
+        <ion-icon name="bookmark-outline" style="font-size: 64px;"></ion-icon>
+        <p>Your watchlist is empty</p>
+        <p>Save movies from the Search tab to see them here</p>
+      </div>
+
+      <!-- if there is 1 or more movies show this part in watch list -->
+      <ion-grid *ngIf="watchlistMovies.length > 0">
+        <ion-row>
+          <ion-col size="12" size-md="6" size-lg="4" *ngFor="let movie of watchlistMovies">
+            <ion-card (click)="getMovieDetails(movie)">
+              <!-- In search tab -->
+              <img [src]="getPosterUrl(movie.Poster)"
+                  (error)="movie.Poster = 'assets/default-poster.png'">
+              <ion-card-content>
+                <p class="movie-title">{{ movie['Title'] }}</p>
+                <p class="movie-year">{{ movie['Year'] }}</p>
+                <ion-button
+                  expand="block"
+                  size="small"
+                  (click)="removeFromWatchlist($event, movie)">
+                  Remove from Watch List
+                </ion-button>
+
+                <ion-button
+                  expand="block"
+                  size="small"
+                  (click)="saveToWatchedList($event, movie)">
+                  Move to Watched List
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-content>
+  </ion-tab>
+
+  <!-- Watched List Tab -->
+  <ion-tab tab="watched-list">
+    <ion-content>
+      <ion-title size="large">Watched List</ion-title>
+    
+      <!-- show the p tags if there are no movies AND the app is not loading -->
+      <div *ngIf="watchedListMovies.length === 0 && !isLoadingWatched" class="ion-text-center ion-padding">
+        <ion-icon name="play-circle-outline" style="font-size: 64px;"></ion-icon>
+        <p>Your watched list is empty</p>
+        <p>Movies you've watched will appear here</p>
+      </div>
+
+      <!-- if there is 1 or more movies show this part in watched list -->
+      <ion-grid *ngIf="watchedListMovies.length > 0">
+        <ion-row>
+          <ion-col size="12" size-md="6" size-lg="4" *ngFor="let movie of watchedListMovies">
+            <ion-card (click)="getMovieDetails(movie)">
+
+              <!-- In search tab -->
+              <img [src]="getPosterUrl(movie.Poster)" 
+                  (error)="movie.Poster = 'assets/default-poster.png'" 
+               />
+
+                  <!-- floating reset button -->
+                  <ion-button
+                    class="reset-floating-btn"
+                    size="small"
+                    fill="solid"
+                    color="light"
+                    title="Reset watch count"
+                    (click)="resetTimesWatched($event, movie)">
+
+                    <ion-icon name="refresh-outline"></ion-icon>
+
+                  </ion-button>
+
+              <ion-card-content>
+
+                <p class="movie-title">{{ movie['Title'] }}</p>
+                <p class="movie-year">{{ movie['Year'] }}</p>
+                
+                <!-- Times Watched Counter -->
+                <div class="counter-container">
+                  <ion-button
+                    size="small"
+                    fill="outline"
+                    style="--border-radius: 20px;"
+                    (click)="decrementTimesWatched($event, movie)">
+                    <ion-icon name="remove-outline"></ion-icon>
+                  </ion-button>
+                  
+                  <span class="times-watched-counter">
+                    🎬 Watched: {{ movie.timesWatched || 0 }} time(s)
+                  </span>
+                  
+                  <ion-button
+                    size="small"
+                    fill="outline"
+                    style="--border-radius: 20px;"
+                    (click)="incrementTimesWatched($event, movie)">
+                    <ion-icon name="add-outline"></ion-icon>
+                  </ion-button>
+                </div>
+                
+                <ion-button class="btnList" 
+                  size="small"
+                  (click)="removeFromWatchedList($event, movie)">
+                  Remove from Watched List
+                </ion-button>
+              
+                <ion-button class="btnList"
+                  expand="block"
+                  size="small"
+                  (click)="saveToWatchlist($event, movie)">
+                  Move to Watch List
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-content>
+  </ion-tab>
+
+  <!-- Stats Tab -->
+  <ion-tab tab="stats">
+    <ion-content class="ion-padding">
+      <ion-title size="large">Stats for Nerds 🎬</ion-title>
+
+      <!-- not logged in -->
+      <div *ngIf="!isLoggedIn" class="ion-text-center ion-padding">
+        <p>Please log in to see your stats</p>
+      </div>
+
+      <!-- no watched movies -->
+      <div *ngIf="isLoggedIn && watchedListMovies.length === 0 && !isLoadingStats"
+          class="ion-text-center ion-padding">
+        <p>Add movies to your Watched List to see stats</p>
+      </div>
+
+      <!-- loading -->
+      <div *ngIf="isLoadingStats" class="ion-text-center ion-padding">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Loading your stats...</p>
+      </div>
+
+      <!-- Stats Content -->
+      <div *ngIf="statsLoaded && !isLoadingStats"
+          class="stats-wrapper">
+
+        <!-- Pie Chart -->
+        <ion-card class="stats-card">
+          <ion-card-header>
+            <ion-card-title class="stats-title">
+              Top 6 Genres
+            </ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content class="chart-content">
+            <div class="chart-container">
+              <canvas id="pieGenres"></canvas>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Bar Chart -->
+        <ion-card class="stats-card">
+          <ion-card-header>
+            <ion-card-title class="stats-title">
+              Most Voted in Top Genre
+            </ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content class="chart-content">
+            <div class="chart-container">
+              <canvas id="barVotes"></canvas>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Recommendation Table -->
+        <ion-card class="stats-card">
+          <ion-card-header>
+            <ion-card-title class="stats-title">
+              You Might Like
+            </ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+
+            <div class="table-wrapper">
+
+              <table class="recommendation-table">
+
+                <thead>
+                  <tr>
+                    <th>Genre</th>
+                    <th>Because You Watched</th>
+                    <th>You Might Like</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let row of recommendationTable">
+
+                    <td class="genre-column">
+                      {{ row.genre }}
+                    </td>
+
+                    <td>
+                      {{ row.watchedMovie }}
+                    </td>
+
+                    <td>
+                      <div *ngFor="let rec of row.recommendations">
+                        • {{ rec }}
+                      </div>
+                    </td>
+
+                  </tr>
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </ion-card-content>
+        </ion-card>
+
+      </div>
+
+    </ion-content>
+  </ion-tab>
+
+
+
+  <!-- Tab Bar -->
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="search">
+      <ion-icon name="search-outline"></ion-icon>
+      <ion-label>Search</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="watch-list">
+      <ion-icon name="bookmark-outline"></ion-icon>
+      <ion-label>Watch List</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="watched-list">
+      <ion-icon name="play-circle-outline"></ion-icon>
+      <ion-label>Watched List</ion-label>
+    </ion-tab-button>
+
+    <!-- show tab if user is logged in -->
+    <ion-tab-button *ngIf="isLoggedIn" tab="stats">
+      <ion-icon name="stats-chart-outline"></ion-icon>
+      <ion-label>Stats</ion-label>
+    </ion-tab-button>
+
+    <!-- show tab if user is logged in -->
+    <ion-tab-button *ngIf="isLoggedIn" tab="logout" (click)="logOut()">
+      <ion-icon name="log-out-outline"></ion-icon>
+      <ion-label>Logout</ion-label>
+    </ion-tab-button>
+
+    <!-- show tab if user is not logged in -->
+    <ion-tab-button *ngIf="!isLoggedIn" (click)="logIn()">
+      <ion-icon name="log-in-outline"></ion-icon>
+      <ion-label>Login</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

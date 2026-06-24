@@ -1,0 +1,37 @@
+<ion-content class="home-content">
+   
+  <h2>Movie Score</h2>
+  <p>
+    The app where you can personalise the movies you have watched, want to watch and how many times you watched them.
+  </p>
+
+  <!-- card for register form -->
+  <ion-card class="register">
+    <ion-card-header>
+      <ion-card-title>Register Now</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item lines="none">
+        <ion-label position="stacked">Enter User Email</ion-label> <br />
+        <ion-input [(ngModel)]="user.userEmail" fill="outline"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label position="stacked">Enter Password</ion-label> <br />
+        <ion-input [(ngModel)]="user.userPassword" type="password" fill="outline"><ion-input-password-toggle slot="end"></ion-input-password-toggle></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label position="stacked">Confirm Password</ion-label> <br />
+        <ion-input [(ngModel)]="user.userConfirmPassword" type="password" fill="outline"><ion-input-password-toggle slot="end"></ion-input-password-toggle></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-button class="btnRegister" (click)="onSubmit()">Register Now</ion-button>
+      </ion-item>
+   </ion-card-content>
+  </ion-card>
+  <p class="accountExist">Already have an Account? <a routerLink="/login-page">Login</a> </p>
+</ion-content>
+

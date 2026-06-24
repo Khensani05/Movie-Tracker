@@ -1,0 +1,32 @@
+<ion-content class="login-content">
+
+<h2>MovieScore</h2>
+  <p>
+    The app where you can personalise the movies you have watched, want to watch and how many times you watched them.
+  </p>
+
+  <ion-card class="login">
+    <ion-card-header>
+      <ion-card-title class="logintitle">Login</ion-card-title>
+    </ion-card-header>
+
+  <ion-card-content>
+    <ion-item lines="none">
+        <ion-label position="stacked">Enter Username</ion-label> <br />
+        <ion-input [(ngModel)]="user.userEmail" fill="outline"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label position="stacked">Enter Password</ion-label> <br />
+        <ion-input [(ngModel)]="user.userPassword" type="password" fill="outline"><ion-input-password-toggle slot="end"></ion-input-password-toggle></ion-input>
+      </ion-item>
+
+      <div lines="none" class="btnContainer">
+        <ion-button class="btnRegister" routerLink="/home">Register</ion-button>
+        <ion-button class="btnLogin" (click)="onSubmit()">Login</ion-button>
+      </div>
+  </ion-card-content>    
+  </ion-card>
+
+  <p>Not interested? <a routerLink="/tabs">Browse</a> instead</p>
+</ion-content>
