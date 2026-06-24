@@ -1,5 +1,8 @@
 📌 Movie Tracker App (Full Stack)
+<<<<<<< HEAD
 
+=======
+>>>>>>> fd8a80453e0852f5adad57325bf36a4824c4ccfc
 A full-stack Movie Tracker web application built with ASP.NET Core Web API (backend) and Ionic/Angular (frontend).
 The system allows users to browse movies, manage watchlists, and track watched movies with authentication support.
 
@@ -44,4 +47,8 @@ SQL Server (or configured DB)
 Tools
 Visual Studio / VS Code
 Git & GitHub
+<<<<<<< HEAD
 Swagger (for API testing)
+=======
+Swagger (for API testing)
+>>>>>>> fd8a80453e0852f5adad57325bf36a4824c4ccfc
